@@ -4,13 +4,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ar.org.lbiagetti.app.building.Floor;
+import ar.org.lbiagetti.app.elevator.elevator_manager.ICallerObserver;
+import ar.org.lbiagetti.app.elevator.elevator_manager.ICallerSender;
 
 public class ElevatorCaller implements ICallerSender {
 	List <ICallerObserver> callerObservers ;
-	private Floor step;
+	final Floor floor;
 	
-	public ElevatorCaller (){
+	public ElevatorCaller (Floor theFloor){
 		callerObservers = new ArrayList();
+		floor = theFloor;
 	}
 	
 	public void addObserver(ICallerObserver theCallerObserver) {
@@ -19,12 +22,12 @@ public class ElevatorCaller implements ICallerSender {
 	
 	public void goUp() {
 		for (ICallerObserver iCallerObserver : callerObservers) {
-			iCallerObserver.goUp(step);
+			iCallerObserver.goUp(floor);
 		}
 	}
 	public void goDown() {
 		for (ICallerObserver iCallerObserver : callerObservers) {
-			iCallerObserver.goDown(step);
+			iCallerObserver.goDown(floor);
 		}
 	}
 

@@ -1,10 +1,11 @@
-package ar.org.lbiagetti.app.elevator;
+package ar.org.lbiagetti.app.elevator.elevator_manager;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import ar.org.lbiagetti.app.building.Building;
 import ar.org.lbiagetti.app.building.Floor;
+import ar.org.lbiagetti.app.elevator.AbstractElevator;
 
 public class ElevatorManager implements ICallerObserver {
 	private List <AbstractElevator> elevators;
