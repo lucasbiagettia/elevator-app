@@ -1,9 +1,11 @@
 package ar.org.lbiagetti.app.elevator;
 
+import ar.org.lbiagetti.app.building.Floor;
+
 public interface ICallerObserver {
 
-	void goUp(Step step);
+	void goUp(Floor step);
 
-	void goDown(Step step);
+	void goDown(Floor step);
 
 }

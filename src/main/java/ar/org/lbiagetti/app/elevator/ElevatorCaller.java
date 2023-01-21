@@ -3,9 +3,11 @@ package ar.org.lbiagetti.app.elevator;
 import java.util.ArrayList;
 import java.util.List;
 
+import ar.org.lbiagetti.app.building.Floor;
+
 public class ElevatorCaller implements ICallerSender {
 	List <ICallerObserver> callerObservers ;
-	private Step step;
+	private Floor step;
 	
 	public ElevatorCaller (){
 		callerObservers = new ArrayList();
