@@ -20,6 +20,15 @@ public class Building {
 		initialized = false;
 		floors = new ArrayList();
 		hostsMap = new HashMap();
+		elevatorManager = new ElevatorManager();
+	}
+	
+	public List<AbstractElevator> getElevators() {
+		return elevatorManager.getElevators();
+	}
+	
+	public List <Floor> getFloors(){
+		return floors;
 	}
 
 	public void addElevator(AbstractElevator theElevator) {

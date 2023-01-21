@@ -32,5 +32,9 @@ public class ElevatorManager implements ICallerObserver {
 	public void setBuilding(Building theBuilding) {
 		building = theBuilding;		
 	}
+
+	public List <AbstractElevator> getElevators() {
+		return elevators;
+	}
 	
 }

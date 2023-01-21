@@ -1,6 +1,9 @@
 package ar.org.lbiagetti.app;
 
+import java.util.List;
+
 import ar.org.lbiagetti.app.building.Building;
+import ar.org.lbiagetti.app.elevator.AbstractElevator;
 import ar.org.lbiagetti.app.initiaization.Initializer;
 import ar.org.lbiagetti.app.security_systems.KeyManager;
 import ar.org.lbiagetti.app.users.Human;
@@ -15,7 +18,9 @@ public class Main {
 		Human human = new Human();
 		KeyManager.giveKey(human);
 		human.enterTheBuilding(building);
-		human.askToGoUp();
+		List<AbstractElevator> elevators = building.getElevators();
+		AbstractElevator abstractElevator = elevators.get(0);
+		human.askToGoUp(abstractElevator); // TODO tiene que poder elegir el elevador
 	}
 
 }

@@ -1,9 +1,11 @@
 package ar.org.lbiagetti.app.users;
 
+import java.util.List;
 import java.util.Optional;
 
 import ar.org.lbiagetti.app.building.Building;
 import ar.org.lbiagetti.app.building.Floor;
+import ar.org.lbiagetti.app.elevator.AbstractElevator;
 import ar.org.lbiagetti.app.elevator.ElevatorCaller;
 import ar.org.lbiagetti.app.security_systems.IKeyUser;
 
@@ -24,10 +26,10 @@ public class Human implements IKeyUser {
 //		// TODO debería poder retornar en qué piso está, tipo la firma, no el objeto porque no quiero que me lo manejen afuera
 //	}
 	// TODO es una poc hay que decidir qué métodos van a la interfaz
-	public void askToGoUp() {
+	public void askToGoUp(AbstractElevator elevator) {
 		if (optionalBuilding.isPresent()) {
 			Floor floor = optionalBuilding.get().getCurrentFloorOfUser(this);
-			ElevatorCaller elevatorCaller = floor.getElevatorCaller();
+			ElevatorCaller elevatorCaller = floor.getElevatorCaller(elevator);
 			elevatorCaller.goUp();			
 			
 		}else {

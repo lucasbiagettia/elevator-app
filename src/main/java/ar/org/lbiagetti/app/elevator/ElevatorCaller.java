@@ -9,10 +9,12 @@ import ar.org.lbiagetti.app.elevator.elevator_manager.ICallerSender;
 
 public class ElevatorCaller implements ICallerSender {
 	List <ICallerObserver> callerObservers ;
+	final AbstractElevator elevator;
 	final Floor floor;
 	
-	public ElevatorCaller (Floor theFloor){
+	public ElevatorCaller (AbstractElevator theElevator,Floor theFloor){
 		callerObservers = new ArrayList();
+		elevator = theElevator;
 		floor = theFloor;
 	}
 	
@@ -31,4 +33,7 @@ public class ElevatorCaller implements ICallerSender {
 		}
 	}
 
+	public AbstractElevator getElevator() {
+		return elevator;
+	}
 }
