@@ -31,7 +31,6 @@ public class Human implements IKeyUser {
 			Floor floor = optionalBuilding.get().getCurrentFloorOfUser(this);
 			ElevatorCaller elevatorCaller = floor.getElevatorCaller(elevator);
 			elevatorCaller.goUp();			
-			
 		}else {
 			throw new RuntimeException ("The human must to be in a building");
 		}

@@ -22,5 +22,4 @@ public class Main {
 		AbstractElevator abstractElevator = elevators.get(0);
 		human.askToGoUp(abstractElevator); // TODO tiene que poder elegir el elevador
 	}
-
 }

@@ -24,12 +24,12 @@ public class ElevatorCaller implements ICallerSender {
 	
 	public void goUp() {
 		for (ICallerObserver iCallerObserver : callerObservers) {
-			iCallerObserver.goUp(floor);
+			iCallerObserver.goUp(elevator, floor);
 		}
 	}
 	public void goDown() {
 		for (ICallerObserver iCallerObserver : callerObservers) {
-			iCallerObserver.goDown(floor);
+			iCallerObserver.goDown(elevator, floor);
 		}
 	}
 
