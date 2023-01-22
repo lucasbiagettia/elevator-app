@@ -13,13 +13,10 @@ public class Building {
 	private List<Floor> floors;
 	private ElevatorManager elevatorManager;
 	private boolean initialized;
-	private Map<Human, Floor> hostsMap;
-	// TODO podrían ser hashmaps y verificamos si ya está en el edificio
 
 	public Building() {
 		initialized = false;
-		floors = new ArrayList();
-		hostsMap = new HashMap();
+		floors = new ArrayList<Floor>();
 		elevatorManager = new ElevatorManager();
 	}
 	
@@ -38,7 +35,7 @@ public class Building {
 
 	public void addFloor(Floor theFloor) {
 		floors.add(theFloor);
-		// TODO sería improtante ordenarlos
+		// TODO sería conveniente ordenarlos
 	}
 
 	public boolean isInitialized() {
@@ -49,17 +46,12 @@ public class Building {
 		initialized = true;
 	}
 
-	public void newHost(Human theHuman) {
-		hostsMap.put(theHuman, floors.get(0));
-	}
-
-	public Floor getCurrentFloorOfUser(Human human) {
-		if (hostsMap.containsKey(human)) {
-			return hostsMap.get(human);
+	public Floor getFirstFloor() {
+		for (Floor floor : floors) {
+			if (floor.getNumberOfFloor() == 0){
+				return floor;
+			}
 		}
-		else {
-			throw new RuntimeException("No esta en el edificio");
-			// TODO
-		}
+		throw new RuntimeException("El piso no existe");
 	}
 }

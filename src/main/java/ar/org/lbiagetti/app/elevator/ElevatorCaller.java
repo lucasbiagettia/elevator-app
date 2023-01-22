@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ar.org.lbiagetti.app.building.Floor;
+import ar.org.lbiagetti.app.elevator.elevator_manager.Direction;
 import ar.org.lbiagetti.app.elevator.elevator_manager.ICallerObserver;
 import ar.org.lbiagetti.app.elevator.elevator_manager.ICallerSender;
 
@@ -13,7 +14,7 @@ public class ElevatorCaller implements ICallerSender {
 	final Floor floor;
 	
 	public ElevatorCaller (AbstractElevator theElevator,Floor theFloor){
-		callerObservers = new ArrayList();
+		callerObservers = new ArrayList<ICallerObserver>();
 		elevator = theElevator;
 		floor = theFloor;
 	}
@@ -22,14 +23,10 @@ public class ElevatorCaller implements ICallerSender {
 		callerObservers.add(theCallerObserver);
 	}
 	
-	public void goUp() {
+	//TODO mostrar excepciòn si el piso es el último o el primero
+	public void call(Direction direction) {
 		for (ICallerObserver iCallerObserver : callerObservers) {
-			iCallerObserver.goUp(elevator, floor);
-		}
-	}
-	public void goDown() {
-		for (ICallerObserver iCallerObserver : callerObservers) {
-			iCallerObserver.goDown(elevator, floor);
+			iCallerObserver.call(elevator, floor, direction);
 		}
 	}
 

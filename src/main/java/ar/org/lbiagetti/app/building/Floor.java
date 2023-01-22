@@ -16,7 +16,7 @@ public class Floor {
 		building = theBuiding;
 		numberOfFloor = theNumberOfFloor;
 		token = theToken;
-		elevatorCallers = new ArrayList();
+		elevatorCallers = new ArrayList<ElevatorCaller>();
 	}
 
 	public Building getBuilding() {

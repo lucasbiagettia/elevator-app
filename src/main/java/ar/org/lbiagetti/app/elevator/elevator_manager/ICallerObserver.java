@@ -5,7 +5,6 @@ import ar.org.lbiagetti.app.elevator.AbstractElevator;
 
 public interface ICallerObserver {
 
-	void goUp(AbstractElevator elevator, Floor floor);
+	void call(AbstractElevator elevator, Floor floor, Direction direction);
 
-	void goDown(AbstractElevator elevator, Floor floor);
 }

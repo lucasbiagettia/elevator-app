@@ -20,7 +20,7 @@ public class ElevatorManager implements ICallerObserver {
 	}
 	
 	@Override
-	public void goUp(AbstractElevator elevator, Floor step) {
+	public void call(AbstractElevator elevator, Floor step, Direction direction) {
 		// Si el elevador está quieto envío la señal derecho y al final
 		// Si el elevador está subiendo y el piso que llama es superior al actual agrego antes de la cota superior o inmediatamente después
 		// Si el elevador está subiendo y el piso que llama es inferior al actual agrego en orden después de la cota superior
@@ -46,11 +46,6 @@ public class ElevatorManager implements ICallerObserver {
 //		        }
 //		    }
 //		}
-		throw new RuntimeException("implementar metodo");		
-	}
-
-	@Override
-	public void goDown(AbstractElevator elevator, Floor step) {
 		throw new RuntimeException("implementar metodo");		
 	}
 
