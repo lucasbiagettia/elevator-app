@@ -20,7 +20,6 @@ public class Initializer {
 			Floor floor;
 			if (i == 0) {
 				floor = new Floor(building, i, "Floor base level");
-
 			} else {
 				floor = new Floor(building, i, "Floor " + i);
 			}

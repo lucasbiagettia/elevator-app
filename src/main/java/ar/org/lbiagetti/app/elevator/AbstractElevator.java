@@ -6,12 +6,14 @@ import java.util.List;
 import java.util.Map;
 
 import ar.org.lbiagetti.app.building.Floor;
+import ar.org.lbiagetti.app.elevator.elevator_manager.KeyBoard;
 
 public abstract class AbstractElevator {
 	//TODO inicializar variables en los constructore
 	private ElevatorStatus status;
 	private Map<Floor, List<IElevatorUser>> mapToNotify;
 	private List<IElevatorUser> elevatorUsers;
+	private KeyBoard keyBoard;
 
 	public void notifyMe(Floor floor, IElevatorUser elevatorUser) {
 		if (mapToNotify.containsKey(floor)) {
@@ -23,6 +25,7 @@ public abstract class AbstractElevator {
 	}
 	
 	private void arriveToANewFloor(Floor floor) {
+		status = ElevatorStatus.STOPPED;
 		if (mapToNotify.containsKey(floor)) {
 			List<IElevatorUser> list = mapToNotify.get(floor);
 			mapToNotify.remove(list);
@@ -32,7 +35,8 @@ public abstract class AbstractElevator {
 		}
 	}
 	
-	public boolean addNewUser(IElevatorUser theUser) {
+	// This method must be sincrhonized because two users can try to invoke this
+	public synchronized boolean addNewUser(IElevatorUser theUser) {
 		if (!isValidUser()) {
 			return false;
 		}else {
@@ -42,4 +46,8 @@ public abstract class AbstractElevator {
 	}
 	
 	abstract boolean isValidUser();
+
+	public KeyBoard getKeyBoard() {
+		return keyBoard;
+	}
 }

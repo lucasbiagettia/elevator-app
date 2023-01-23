@@ -9,6 +9,7 @@ import ar.org.lbiagetti.app.elevator.AbstractElevator;
 import ar.org.lbiagetti.app.elevator.ElevatorCaller;
 import ar.org.lbiagetti.app.elevator.IElevatorUser;
 import ar.org.lbiagetti.app.elevator.elevator_manager.Direction;
+import ar.org.lbiagetti.app.elevator.elevator_manager.KeyBoard;
 import ar.org.lbiagetti.app.security_systems.IKeyUser;
 
 public class Human implements IKeyUser, IElevatorUser {
@@ -62,11 +63,9 @@ public class Human implements IKeyUser, IElevatorUser {
 		}
 	}
 	
-	private void chooseFloor(AbstractElevator theElevator, Floor floor) {
+	private void chooseFloor(AbstractElevator elevator, Floor floor) {
 		// TODO en una aplicación real este método debería sobreescribirse y el usuario deberìa pdoer elegirlo
-		do {
 			KeyBoard keyBoard = elevator.getKeyBoard();
 			keyBoard.goToFloor(floor);
-		}while (isAvaibleFloor = false)
 	}
 }
