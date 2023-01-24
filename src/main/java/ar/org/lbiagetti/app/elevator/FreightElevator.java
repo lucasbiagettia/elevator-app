@@ -3,9 +3,12 @@ package ar.org.lbiagetti.app.elevator;
 public class FreightElevator extends AbstractElevator {
 
 	@Override
-	boolean isValidUser() {
+	void weightControl(IElevatorUser elevatorUser) {
 		// TODO Auto-generated method stub
-		return false;
 	}
 
+	@Override
+	boolean cardControl() {
+		return true;
+	}
 }

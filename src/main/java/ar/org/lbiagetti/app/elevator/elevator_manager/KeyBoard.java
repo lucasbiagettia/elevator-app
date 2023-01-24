@@ -15,4 +15,8 @@ public class KeyBoard {
 	public void goToFloor(Floor floor) {
 		elevatorManager.goToFloor(floor, elevator);
 	}
+
+	public void sendAlarm(AbstractElevator abstractElevator) {
+		elevatorManager.alarm(abstractElevator);		
+	}
 }

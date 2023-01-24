@@ -17,6 +17,7 @@ public class Human implements IKeyUser, IElevatorUser {
 	private Optional<Building> optionalBuilding = Optional.empty();
 	private Optional <Floor> optionalFloor = Optional.empty();
 	private Optional <Direction> lastDirection;
+	private int weight = 200;
 
 	public void enterTheBuilding(Building building) {
 		optionalBuilding = Optional.of(building);
@@ -67,5 +68,15 @@ public class Human implements IKeyUser, IElevatorUser {
 		// TODO en una aplicación real este método debería sobreescribirse y el usuario deberìa pdoer elegirlo
 			KeyBoard keyBoard = elevator.getKeyBoard();
 			keyBoard.goToFloor(floor);
+	}
+
+	@Override
+	public void setNewFloor(Floor floor) {
+		optionalFloor = Optional.of(floor);
+	}
+
+	@Override
+	public int getWeight() {
+		return weight;
 	}
 }
