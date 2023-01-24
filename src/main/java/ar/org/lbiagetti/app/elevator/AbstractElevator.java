@@ -143,4 +143,8 @@ public abstract class AbstractElevator implements Runnable {
 	public void setInitialFloor(Floor theInitialFloor) {
 		currentFloor = theInitialFloor;
 	}
+
+	public void setElevatorStatus(ElevatorStatus elevatorStatus) {
+		status = elevatorStatus;
+	}
 }

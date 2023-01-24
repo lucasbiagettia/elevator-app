@@ -21,6 +21,10 @@ public class Human implements IElevatorUser {
 	private int weight = 200;
 	private Key key;
 
+	public Optional<Floor> getOptionalFloor() {
+		return optionalFloor;
+	}
+
 	public void enterTheBuilding(Building building) {
 		optionalBuilding = Optional.of(building);
 		optionalFloor = Optional.of(building.getFirstFloor());

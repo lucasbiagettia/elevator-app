@@ -31,6 +31,5 @@ public class Main {
 		human.enterTheBuilding(building);
 		List<AbstractElevator> elevators = building.getElevators();
 		human.callAndWaitThe(elevators.get(0), Direction.GO_UP);
-		Logger.log("human.getClass()", false);
 	}
 }

@@ -253,4 +253,8 @@ public class ElevatorManager implements ICallerObserver {
 			thread.start();
 		}
 	}
+
+	public Building getBuilding() {
+		return building;
+	}
 }

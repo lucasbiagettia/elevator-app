@@ -33,11 +33,11 @@ public class KeyManager {
 	}
 
 	public static void setForbiddenFloors(List<Floor> restrictedFloor) {
-		forbiddenFloors.addAll(restrictedFloor);
+		getForbiddenFloors().addAll(restrictedFloor);
 	}
 
 	public static boolean hasPermissions(IElevatorUser theUser, Floor floor) {
-		if (forbiddenFloors.contains(floor)) {
+		if (getForbiddenFloors().contains(floor)) {
 			Key keyUser = theUser.getKey();
 			Key keyMap = verifyFalseKey.get(theUser);
 			if (keyUser != keyMap) {
@@ -52,5 +52,10 @@ public class KeyManager {
 			return true;
 		}
 	}
+
+	public static List<Floor> getForbiddenFloors() {
+		return forbiddenFloors;
+	}
+
 
 }
