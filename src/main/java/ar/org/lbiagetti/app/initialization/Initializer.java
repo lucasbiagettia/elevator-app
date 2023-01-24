@@ -42,7 +42,7 @@ public class Initializer {
 		building.addElevator(freightElevator);
 		ElevatorManager elevatorManager = building.getElevatorManager();
 		publicElevator.addKeyBoard(new KeyBoard(publicElevator, elevatorManager));
-		freightElevator.addKeyBoard(new KeyBoard(publicElevator, elevatorManager));
+		freightElevator.addKeyBoard(new KeyBoard(freightElevator, elevatorManager));
 		publicElevator.setInitialFloor(initialFloor);
 		publicElevator.setInitialFloor(initialFloor);
 		List<AbstractElevator> elevators = building.getElevators();
@@ -60,7 +60,7 @@ public class Initializer {
 	}
 	
 	public List<Floor> getRestrictedFloor(List<Floor> floors, List<Integer> list){
-		List<Floor> restrictedFloors = new ArrayList();
+		List<Floor> restrictedFloors = new ArrayList<Floor>();
 		for (Floor floor : floors) {
 			if (list.contains(floor.getNumberOfFloor())) {
 				restrictedFloors.add(floor);

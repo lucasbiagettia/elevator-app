@@ -9,7 +9,6 @@ import ar.org.lbiagetti.app.elevator.AbstractElevator;
 import ar.org.lbiagetti.app.elevator.ElevatorCaller;
 import ar.org.lbiagetti.app.elevator.IElevatorUser;
 import ar.org.lbiagetti.app.elevator.elevator_manager.Direction;
-import ar.org.lbiagetti.app.elevator.elevator_manager.ElevatorException;
 import ar.org.lbiagetti.app.elevator.elevator_manager.KeyBoard;
 import ar.org.lbiagetti.app.initialization.Logger;
 import ar.org.lbiagetti.app.security_systems.Key;
@@ -39,8 +38,8 @@ public class Human implements IElevatorUser {
 	public void callAndWaitThe(AbstractElevator abstractElevator, Direction theDirection) {
 		Logger.log("Lllama al ascensor " + abstractElevator.toString()+ "El usuario " + this.toString() +" con direccion " + theDirection, true);
 		ElevatorCaller elevatorCaller = getElevatorCaller(abstractElevator);
-		elevatorCaller.call(theDirection);
 		abstractElevator.notifyMe(optionalFloor.get(), this);
+		elevatorCaller.call(theDirection);
 	}
 	
 	private ElevatorCaller getElevatorCaller(AbstractElevator abstractElevator) {
@@ -63,7 +62,8 @@ public class Human implements IElevatorUser {
 		KeyBoard keyBoard = elevator.getKeyBoard();
 		try {
 		keyBoard.goToFloor(selectRandomFloor(), this);
-		} catch (ElevatorException e){
+		} catch (Exception e){
+			System.err.println("Este usuario no puede ir a ese piso");
 			return;
 		}
 		elevator.addNewUser(this);

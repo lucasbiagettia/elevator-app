@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Map;
 
 import ar.org.lbiagetti.app.building.Floor;
+import ar.org.lbiagetti.app.elevator.AbstractElevator;
+import ar.org.lbiagetti.app.elevator.FreightElevator;
 import ar.org.lbiagetti.app.elevator.IElevatorUser;
 import ar.org.lbiagetti.app.initialization.Logger;
 
@@ -36,8 +38,8 @@ public class KeyManager {
 		getForbiddenFloors().addAll(restrictedFloor);
 	}
 
-	public static boolean hasPermissions(IElevatorUser theUser, Floor floor) {
-		if (getForbiddenFloors().contains(floor)) {
+	public static boolean hasPermissions(IElevatorUser theUser, Floor floor, AbstractElevator elevator) {
+		if (getForbiddenFloors().contains(floor) && elevator instanceof FreightElevator) {
 			Key keyUser = theUser.getKey();
 			Key keyMap = verifyFalseKey.get(theUser);
 			if (keyUser != keyMap) {

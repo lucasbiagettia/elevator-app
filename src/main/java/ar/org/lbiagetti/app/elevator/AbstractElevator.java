@@ -144,4 +144,5 @@ public abstract class AbstractElevator implements Runnable {
 	public void setElevatorStatus(ElevatorStatus elevatorStatus) {
 		status = elevatorStatus;
 	}
+	
 }

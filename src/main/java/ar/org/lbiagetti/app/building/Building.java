@@ -1,13 +1,10 @@
 package ar.org.lbiagetti.app.building;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import ar.org.lbiagetti.app.elevator.AbstractElevator;
 import ar.org.lbiagetti.app.elevator.elevator_manager.ElevatorManager;
-import ar.org.lbiagetti.app.users.Human;
 
 public class Building {
 	private List<Floor> floors;

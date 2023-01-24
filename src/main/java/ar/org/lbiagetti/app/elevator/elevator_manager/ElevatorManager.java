@@ -17,7 +17,7 @@ public class ElevatorManager implements ICallerObserver {
 	private Building building; // TODO ¿necesita saber a qué edificio pertenece?
 
 	public ElevatorManager() {
-		elevators = new ArrayList();
+		elevators = new ArrayList<AbstractElevator>();
 	}
 
 	public void addElevator(AbstractElevator theElevator) {
@@ -59,6 +59,7 @@ public class ElevatorManager implements ICallerObserver {
 			queue.add(floor);
 			Thread thread = new Thread(elevator);
 			thread.start();
+			return;
 		}
 		if (queue.contains(currentFloor)) {
 			return;
@@ -193,7 +194,7 @@ public class ElevatorManager implements ICallerObserver {
 	// Es más fácil, recorro el for y cuando esté entre dos, cambie el sentido, o
 	// llegue al final.
 	public void goToFloor(Floor floor, AbstractElevator elevator, IElevatorUser elevatorUser) throws ElevatorException {
-		if (!KeyManager.hasPermissions(elevatorUser, floor)) {
+		if (!KeyManager.hasPermissions(elevatorUser, floor, elevator)) {
 			throw new ElevatorException();
 		}
 		elevator.toDescend(floor, elevatorUser);
