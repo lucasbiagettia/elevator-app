@@ -1,4 +1,4 @@
-package ar.org.lbiagetti.app.initiaization;
+package ar.org.lbiagetti.app.initialization;
 
 public class Logger {
 	

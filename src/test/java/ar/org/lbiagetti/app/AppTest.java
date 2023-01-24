@@ -1,7 +1,6 @@
 package ar.org.lbiagetti.app;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 import java.util.List;
 
@@ -10,9 +9,8 @@ import org.junit.Test;
 import ar.org.lbiagetti.app.building.Building;
 import ar.org.lbiagetti.app.elevator.AbstractElevator;
 import ar.org.lbiagetti.app.elevator.elevator_manager.Direction;
-import ar.org.lbiagetti.app.initiaization.Initializer;
-import ar.org.lbiagetti.app.initiaization.Logger;
-import ar.org.lbiagetti.app.initiaization.StaticConfiguration;
+import ar.org.lbiagetti.app.initialization.Initializer;
+import ar.org.lbiagetti.app.initialization.StaticConfiguration;
 import ar.org.lbiagetti.app.security_systems.KeyManager;
 import ar.org.lbiagetti.app.users.Human;
 

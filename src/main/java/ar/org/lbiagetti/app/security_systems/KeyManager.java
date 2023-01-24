@@ -7,7 +7,7 @@ import java.util.Map;
 
 import ar.org.lbiagetti.app.building.Floor;
 import ar.org.lbiagetti.app.elevator.IElevatorUser;
-import ar.org.lbiagetti.app.initiaization.Logger;
+import ar.org.lbiagetti.app.initialization.Logger;
 
 public class KeyManager {
 	private static Map<IElevatorUser, Key> verifyFalseKey = new HashMap<IElevatorUser, Key>();

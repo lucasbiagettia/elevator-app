@@ -9,7 +9,7 @@ import java.util.Map;
 
 import ar.org.lbiagetti.app.building.Floor;
 import ar.org.lbiagetti.app.elevator.elevator_manager.KeyBoard;
-import ar.org.lbiagetti.app.initiaization.Logger;
+import ar.org.lbiagetti.app.initialization.Logger;
 
 public abstract class AbstractElevator implements Runnable {
 	//TODO inicializar variables en los constructore
@@ -20,9 +20,6 @@ public abstract class AbstractElevator implements Runnable {
 	private KeyBoard keyBoard;
 	private List<Floor> queue = Collections.synchronizedList(new ArrayList<Floor>());
 	private Floor currentFloor;
-	private int maxWeight;
-	
-
 	public AbstractElevator() {
 		mapToNotify = new HashMap<Floor, List<IElevatorUser>>();
 		mapToDescend = new HashMap<Floor, List<IElevatorUser>>();

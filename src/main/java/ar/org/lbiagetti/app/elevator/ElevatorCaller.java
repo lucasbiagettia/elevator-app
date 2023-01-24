@@ -7,7 +7,7 @@ import ar.org.lbiagetti.app.building.Floor;
 import ar.org.lbiagetti.app.elevator.elevator_manager.Direction;
 import ar.org.lbiagetti.app.elevator.elevator_manager.ICallerObserver;
 import ar.org.lbiagetti.app.elevator.elevator_manager.ICallerSender;
-import ar.org.lbiagetti.app.initiaization.Logger;
+import ar.org.lbiagetti.app.initialization.Logger;
 
 public class ElevatorCaller implements ICallerSender {
 	List <ICallerObserver> callerObservers ;

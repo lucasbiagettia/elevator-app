@@ -11,7 +11,7 @@ import ar.org.lbiagetti.app.elevator.IElevatorUser;
 import ar.org.lbiagetti.app.elevator.elevator_manager.Direction;
 import ar.org.lbiagetti.app.elevator.elevator_manager.ElevatorException;
 import ar.org.lbiagetti.app.elevator.elevator_manager.KeyBoard;
-import ar.org.lbiagetti.app.initiaization.Logger;
+import ar.org.lbiagetti.app.initialization.Logger;
 import ar.org.lbiagetti.app.security_systems.Key;
 
 public class Human implements IElevatorUser {

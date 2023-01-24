@@ -9,7 +9,7 @@ import ar.org.lbiagetti.app.building.Floor;
 import ar.org.lbiagetti.app.elevator.AbstractElevator;
 import ar.org.lbiagetti.app.elevator.ElevatorStatus;
 import ar.org.lbiagetti.app.elevator.IElevatorUser;
-import ar.org.lbiagetti.app.initiaization.Logger;
+import ar.org.lbiagetti.app.initialization.Logger;
 import ar.org.lbiagetti.app.security_systems.KeyManager;
 
 public class ElevatorManager implements ICallerObserver {
@@ -178,6 +178,10 @@ public class ElevatorManager implements ICallerObserver {
 				}
 				break;
 			}
+		default:
+			// Si me equivoque en la algoritmia que no se quede afuera
+			queue.add(floor);
+			break;
 		}
 
 	}
