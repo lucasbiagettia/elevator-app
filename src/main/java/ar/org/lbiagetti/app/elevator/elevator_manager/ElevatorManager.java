@@ -9,6 +9,8 @@ import ar.org.lbiagetti.app.building.Floor;
 import ar.org.lbiagetti.app.elevator.AbstractElevator;
 import ar.org.lbiagetti.app.elevator.ElevatorStatus;
 import ar.org.lbiagetti.app.elevator.IElevatorUser;
+import ar.org.lbiagetti.app.initiaization.Logger;
+import ar.org.lbiagetti.app.security_systems.KeyManager;
 
 public class ElevatorManager implements ICallerObserver {
 	private List<AbstractElevator> elevators;
@@ -25,195 +27,230 @@ public class ElevatorManager implements ICallerObserver {
 	public void setBuilding(Building theBuilding) {
 		building = theBuilding;
 	}
+	
+	
+//  este es el método que usamos para llamar al ascensor desde afuera.	
+//	me llaman
+//	opciones:
+//		1- sin cola --> agrego directamente
+//		2- elevador subiendo
+//			2 a- quiero subir
+//				el elevador está arriba mio --> espero a que TERMINE de bajar y me añado
+//				el elevador está abajo mio --> me añado en mi posición
+//			2 b- quiero bajar
+//				- espero a que termine de subir y me añado en mi posicion
+//		3- elevador bajando
+//			3 a- quiero subir
+//				esperoa que temrine de bajar y me meto en mi posicion
+//			3 b- quiero bajar
+//				el elevador esta arriba mio --> me añado
+//				el elevador esta abajo mio --> espero a que termine de subir y me añado, es decir al final
 
-	// Si el elevador está quieto envío la señal derecho y al final
-
-	// Si el elevador está subiendo y el piso que llama es superior al actual agrego
-	// antes de la cota superior o inmediatamente después
-	// Si el elevador está subiendo y el piso que llama es inferior al actual agrego
-	// en orden después de la cota superior
-
-	// Si el elevador está bajando y el piso que llama es superior al actual agrego
-	// en orden después de la cota inferior
-	// Si el elevador está bajando y el piso que llama es superior al actual agrego
-	// antes de la cota inferior o inmediatamente después
 	@Override
-	public void call(AbstractElevator elevator, Floor floor, Direction direction, IElevatorUser elevatorUser) {
-		ElevatorStatus elevatorStatus = elevator.getElevatorStatus();
-		List<Floor> queueForEdit = elevator.getQueueForEdit();
-		Floor currentFloor = elevator.getCurrentFloor();
-		Floor maxFloor = queueForEdit.stream().max(Comparator.comparingInt(Floor::getNumberOfFloor)).orElse(null);
-		Floor minFloor = queueForEdit.stream().min(Comparator.comparingInt(Floor::getNumberOfFloor)).orElse(null);
-		if (queueForEdit.contains(currentFloor)) {
-			return;
-		}
-
-		switch (elevatorStatus) {
-		case STOPPED:
-			queueForEdit.add(floor);
-			Thread thread = new Thread(elevator);
-			thread.start();
-			break;
-		case ASCENDING:
-			if (queueForEdit.size() == 1) {
-				int numberOfUniqueFloor = queueForEdit.get(0).getNumberOfFloor();
-				if (numberOfUniqueFloor > floor.getNumberOfFloor()) {
-					queueForEdit.add(0, floor);
-				} else {
-					queueForEdit.add(1, floor);
-				}
-				break;
-			}
-			if (currentFloor.getNumberOfFloor() < floor.getNumberOfFloor()) {
-				if (maxFloor.getNumberOfFloor() < floor.getNumberOfFloor()) {
-					int maxIndex = queueForEdit.indexOf(maxFloor);
-					queueForEdit.add(maxIndex + 1, floor);
-					break;
-				} else {
-					for (int i = 0; i < queueForEdit.size() - 1; i++) {
-						int numberOfIFloor = queueForEdit.get(i).getNumberOfFloor();
-						int numberOfIPlusFloor = queueForEdit.get(i + 1).getNumberOfFloor();
-						if (numberOfIFloor < floor.getNumberOfFloor()
-								&& numberOfIPlusFloor > floor.getNumberOfFloor()) {
-							queueForEdit.add(i, floor);
-							break;
-						}
-					}
-				}
-			} else {
-				int maxIndex = queueForEdit.indexOf(maxFloor);
-				if (queueForEdit.size() == maxIndex) {
-					queueForEdit.add(floor);
-					break;
-				} else {
-					for (int i = maxIndex; i < queueForEdit.size() - 1; i++) {
-						int numberOfIFloor = queueForEdit.get(i).getNumberOfFloor();
-						int numberOfIPlusFloor = queueForEdit.get(i + 1).getNumberOfFloor();
-						if (numberOfIFloor > floor.getNumberOfFloor()
-								&& numberOfIPlusFloor < floor.getNumberOfFloor()) {
-							queueForEdit.add(i, floor);
-							break;
-						}
-					}
-				}
-			}
-			break;
-		case DESCENDING:
-			if (queueForEdit.size() == 1) {
-				int numberOfUniqueFloor = queueForEdit.get(0).getNumberOfFloor();
-				if (numberOfUniqueFloor < floor.getNumberOfFloor()) {
-					queueForEdit.add(0, floor);
-					break;
-				} else {
-					queueForEdit.add(1, floor);
-					break;
-				}
-			}
-			if (currentFloor.getNumberOfFloor() > floor.getNumberOfFloor()) {
-				if (minFloor.getNumberOfFloor() > floor.getNumberOfFloor()) {
-					int minIndex = queueForEdit.indexOf(minFloor);
-					queueForEdit.add(minIndex + 1, floor);
-					break;
-				} else {
-					for (int i = 0; i < queueForEdit.size() - 1; i++) {
-						int numberOfIFloor = queueForEdit.get(i).getNumberOfFloor();
-						int numberOfIPlusFloor = queueForEdit.get(i + 1).getNumberOfFloor();
-						if (numberOfIFloor > floor.getNumberOfFloor()
-								&& numberOfIPlusFloor < floor.getNumberOfFloor()) {
-							queueForEdit.add(i, floor);
-							break;
-						}
-					}
-				}
-			} else {
-				int minIndex = queueForEdit.indexOf(minFloor);
-				if (queueForEdit.size() == minIndex) {
-					queueForEdit.add(floor);
-					break;
-				} else {
-					for (int i = minIndex; i < queueForEdit.size() - 1; i++) {
-						int numberOfIFloor = queueForEdit.get(i).getNumberOfFloor();
-						int numberOfIPlusFloor = queueForEdit.get(i + 1).getNumberOfFloor();
-						if (numberOfIFloor < floor.getNumberOfFloor()
-								&& numberOfIPlusFloor > floor.getNumberOfFloor()) {
-							queueForEdit.add(i, floor);
-							break;
-						}
-					}
-				}
-			}
-			break;
-		}
-	}	
-	
-	
-	public void call2(AbstractElevator elevator, Floor floor, Direction direction, IElevatorUser elevatorUser) {
+	public void call(AbstractElevator elevator, Floor floor, Direction direction) {
+		Logger.log("El caller observer empeiza a trabajar", true);
 		ElevatorStatus elevatorStatus = elevator.getElevatorStatus();
 		List<Floor> queue = elevator.getQueueForEdit();
 		Floor currentFloor = elevator.getCurrentFloor();
 		Floor maxFloor = queue.stream().max(Comparator.comparingInt(Floor::getNumberOfFloor)).orElse(null);
 		Floor minFloor = queue.stream().min(Comparator.comparingInt(Floor::getNumberOfFloor)).orElse(null);
-		if (queue.contains(currentFloor)) {
-			return;
-		}
-
-		switch (elevatorStatus) {
-		case STOPPED:
+		if (queue.isEmpty()) {
+			Logger.log("la cola estaba vacia asi que le damos un hilo", true);
 			queue.add(floor);
 			Thread thread = new Thread(elevator);
 			thread.start();
-			break;
+		}
+		if (queue.contains(currentFloor)) {
+			return;
+		}
+		switch (elevatorStatus) {
 		case ASCENDING:
 			switch (direction) {
 			case GO_UP:
-				if (queue.size() == 1) {
-					Integer numberOfFloor = queue.get(0).getNumberOfFloor();
-					if (numberOfFloor > floor.getNumberOfFloor()) {
-						queue.add(0, floor);
-						return;
-					}else {
+				if (currentFloor.getNumberOfFloor() > floor.getNumberOfFloor()) {
+					int minIndex = queue.indexOf(minFloor);
+					if (queue.size() >= 1) {
+						for (int i = minIndex; i < queue.size() - 1; i++) {
+							int numOfIFloor = queue.get(i).getNumberOfFloor();
+							int numOfIPlusFloor = queue.get(i + 1).getNumberOfFloor();
+							if (numOfIFloor < floor.getNumberOfFloor() && floor.getNumberOfFloor() < numOfIPlusFloor) {
+								queue.add(i, floor);
+							} else if (i == queue.size() - 1) {
+								queue.add(currentFloor);
+							}
+						}
+					} else {
 						queue.add(floor);
-						return;
+						break;
 					}
-				}else {
-					if (maxFloor.getNumberOfFloor() < floor.getNumberOfFloor()) {
-						indexMax = maxF
+				} else {
+					if (queue.size() >= 1) {
+						for (int i = 0; i < queue.size() - 1; i++) {
+							int numOfIFloor = queue.get(i).getNumberOfFloor();
+							int numOfIPlusFloor = queue.get(i + 1).getNumberOfFloor();
+							if (numOfIFloor < floor.getNumberOfFloor() && floor.getNumberOfFloor() < numOfIPlusFloor) {
+								queue.add(i, floor);
+							} else if (i == queue.size() - 1) {
+								queue.add(currentFloor);
+							}
+						}
+					} else {
+						queue.add(floor);
+						break;
 					}
 				}
-				
+				break;
 			case GO_DOWN:
-			
+				int maxIndex = queue.indexOf(maxFloor);
+				if (queue.size() >= 1) {
+					for (int i = maxIndex; i < queue.size() - 1; i++) {
+						int numOfIFloor = queue.get(i).getNumberOfFloor();
+						int numOfIPlusFloor = queue.get(i + 1).getNumberOfFloor();
+						if (numOfIFloor > floor.getNumberOfFloor() && floor.getNumberOfFloor() > numOfIPlusFloor) {
+							queue.add(i, floor);
+						} else if (i == queue.size() - 1) {
+							queue.add(currentFloor);
+						}
+					}
+				} else {
+					queue.add(floor);
+					break;
+				}
+
+				break;
 			}
+			break;
 		case DESCENDING:
-			
+			switch (direction) {
+			case GO_UP:
+				int minIndex = queue.indexOf(minFloor);
+				if (queue.size() >= 1) {
+					for (int i = minIndex; i < queue.size() - 1; i++) {
+						int numOfIFloor = queue.get(i).getNumberOfFloor();
+						int numOfIPlusFloor = queue.get(i + 1).getNumberOfFloor();
+						if (numOfIFloor < floor.getNumberOfFloor() && floor.getNumberOfFloor() < numOfIPlusFloor) {
+							queue.add(i, floor);
+						} else if (i == queue.size() - 1) {
+							queue.add(currentFloor);
+						}
+					}
+				} else {
+					queue.add(floor);
+					break;
+				}
+				break;
+			case GO_DOWN:
+//				3 b- quiero bajar
+//				
+//				el elevador esta abajo mio --> espero a que termine de subir y me añado, es decir al final
+//				el elevador esta arriba mio --> me añado
+				int maxIndex = queue.indexOf(maxFloor);
+				if (currentFloor.getNumberOfFloor() < floor.getNumberOfFloor()) {
+					if (queue.size() >= 1) {
+						for (int i = maxIndex; i < queue.size() - 1; i++) {
+							int numOfIFloor = queue.get(i).getNumberOfFloor();
+							int numOfIPlusFloor = queue.get(i + 1).getNumberOfFloor();
+							if (numOfIFloor > floor.getNumberOfFloor() && floor.getNumberOfFloor() > numOfIPlusFloor) {
+								queue.add(i, floor);
+							} else if (i == queue.size() - 1) {
+								queue.add(currentFloor);
+							}
+						}
+					} else {
+						queue.add(floor);
+						break;
+					}
+				} else {
+					if (queue.size() >= 1) {
+						for (int i = 0; i < queue.size() - 1; i++) {
+							int numOfIFloor = queue.get(i).getNumberOfFloor();
+							int numOfIPlusFloor = queue.get(i + 1).getNumberOfFloor();
+							if (numOfIFloor > floor.getNumberOfFloor() && floor.getNumberOfFloor() > numOfIPlusFloor) {
+								queue.add(i, floor);
+							} else if (i == queue.size() - 1) {
+								queue.add(currentFloor);
+							}
+						}
+					} else {
+						queue.add(floor);
+						break;
+					}
+				}
+				break;
+			}
 		}
+
 	}
 
 	public List<AbstractElevator> getElevators() {
 		return elevators;
 	}
 
-	public void goToFloor(Floor floor, AbstractElevator elevator, IElevatorUser elevatorUser) {
+	// Es más fácil, recorro el for y cuando esté entre dos, cambie el sentido, o
+	// llegue al final.
+	public void goToFloor(Floor floor, AbstractElevator elevator, IElevatorUser elevatorUser) throws ElevatorException {
+		if (!KeyManager.hasPermissions(elevatorUser, floor)) {
+			throw new ElevatorException();
+		}
 		elevator.toDescend(floor, elevatorUser);
 		List<Floor> queue = elevator.getQueueForEdit();
-		if (queue.contains(floor)) {
+		if (queue.isEmpty()) {
+			queue.add(floor);
+			Thread thread = new Thread(elevator);
+			thread.start();
 			return;
-		}
-		ElevatorStatus elevatorStatus = elevator.getElevatorStatus();
-		Floor maxFloor = queue.stream().max(Comparator.comparingInt(Floor::getNumberOfFloor)).orElse(null);
-		Floor minFloor = queue.stream().min(Comparator.comparingInt(Floor::getNumberOfFloor)).orElse(null);
-		if (maxFloor.getNumberOfFloor() < floor.getNumberOfFloor()) {
-			indexMax
-		}
-		if (minFloor.getNumberOfFloor() < floor.getNumberOfFloor()) {
-
+		} else {
+			ElevatorStatus status = elevator.getElevatorStatus();
+			if (queue.size() == 1) {
+				if (status.equals(ElevatorStatus.ASCENDING)) {
+					if (floor.getNumberOfFloor() > queue.get(0).getNumberOfFloor()) {
+						queue.add(floor);
+						return;
+					} else {
+						queue.add(0, floor);
+						return;
+					}
+				} else {
+					if (floor.getNumberOfFloor() < queue.get(0).getNumberOfFloor()) {
+						queue.add(floor);
+						return;
+					} else {
+						queue.add(0, floor);
+						return;
+					}
+				}
+			} else {
+				for (int i = 0; i < queue.size() + 1; i++) {
+					int numOfIFloor = queue.get(i).getNumberOfFloor();
+					int numOfIPlusFloor = queue.get(i + 1).getNumberOfFloor();
+					if (numOfIFloor < floor.getNumberOfFloor() && floor.getNumberOfFloor() < numOfIPlusFloor
+							|| numOfIFloor > floor.getNumberOfFloor() && floor.getNumberOfFloor() > numOfIPlusFloor) {
+						queue.add(i, floor);
+						return;
+					} else if (i == queue.size() - 1) {
+						queue.add(floor);
+						return;
+					} else if (status.equals(ElevatorStatus.ASCENDING) && numOfIFloor < numOfIPlusFloor 
+							||status.equals(ElevatorStatus.DESCENDING) && numOfIFloor > numOfIPlusFloor) {
+						queue.add(i,floor);
+					}
+				}
+			}
 		}
 	}
 
 	public void alarm(AbstractElevator abstractElevator) {
 		while (true) {
-			System.err.println("Problemas en el elevator "+ abstractElevator.toString());
+			System.err.println("Problemas en el elevator " + abstractElevator.toString());
 		}
-		
+	}
+
+	public void callInmediately(AbstractElevator elevator, Floor floor) {
+		List<Floor> queue = elevator.getQueueForEdit();
+		queue.add(0, floor);
+		if (queue.size() == 1) {
+			Thread thread = new Thread(elevator);
+			thread.start();
+		}
 	}
 }

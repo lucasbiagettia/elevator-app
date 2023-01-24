@@ -3,12 +3,13 @@ package ar.org.lbiagetti.app.elevator;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import ar.org.lbiagetti.app.building.Floor;
 import ar.org.lbiagetti.app.elevator.elevator_manager.KeyBoard;
+import ar.org.lbiagetti.app.initiaization.Logger;
 
 public abstract class AbstractElevator implements Runnable {
 	//TODO inicializar variables en los constructore
@@ -20,6 +21,14 @@ public abstract class AbstractElevator implements Runnable {
 	private List<Floor> queue = Collections.synchronizedList(new ArrayList<Floor>());
 	private Floor currentFloor;
 	private int maxWeight;
+	
+
+	public AbstractElevator() {
+		mapToNotify = new HashMap<Floor, List<IElevatorUser>>();
+		mapToDescend = new HashMap<Floor, List<IElevatorUser>>();
+		elevatorUsers = new ArrayList<IElevatorUser>();
+		status = ElevatorStatus.STOPPED;
+	}
 
 	public void notifyMe(Floor floor, IElevatorUser elevatorUser) {
 		if (mapToNotify.containsKey(floor)) {
@@ -31,6 +40,7 @@ public abstract class AbstractElevator implements Runnable {
 	}
 	
 	public void toDescend(Floor floor, IElevatorUser elevatorUser) {
+		// Este circuito está medio confuso, el array necesito llenarlo acá.
 		elevatorUsers.add(elevatorUser);
 		if (mapToDescend.containsKey(floor)) {
 			mapToDescend.get(floor).add(elevatorUser);
@@ -41,17 +51,18 @@ public abstract class AbstractElevator implements Runnable {
 	}
 	
 	private void arriveToANewFloor(Floor floor) {
+		currentFloor = floor;
 		if (mapToNotify.containsKey(floor)) {
 			List<IElevatorUser> list = mapToNotify.get(floor);
-			mapToNotify.remove(list);
+			mapToNotify.remove(floor);
 			for (IElevatorUser iElevatorUser : list) {
 				iElevatorUser.theElevatorIsArrived(this);
 			}
 		}
 		if (mapToDescend.containsKey(floor)) {
 			List<IElevatorUser> list = mapToDescend.get(floor);
-			mapToDescend.remove(list);
-			elevatorUsers.remove(list);
+			mapToDescend.remove(floor);
+			elevatorUsers.removeAll(list);
 			for (IElevatorUser iElevatorUser : list) {
 				iElevatorUser.setNewFloor(floor);
 			}
@@ -59,29 +70,26 @@ public abstract class AbstractElevator implements Runnable {
 	}
 	
 	// This method must be sincrhonized because two users can try to invoke this
-	public synchronized boolean addNewUser(IElevatorUser theUser) {
-		// TODO
-		if (cardControl()) {
-			return false;
-		}else {
-			return true;
-		}
+	public synchronized void addNewUser(IElevatorUser theUser) {
+		// Sólo tengo que validar esto porque los permisos los valida el elevator manager.
+		weightControl(theUser);
 	}
 	
 	private void weightControl(IElevatorUser elevatorUser) {
+		// En este caso la consigna sugiere enviar una alarma, to tambien lo stoppeo
 		int sum = elevatorUsers.stream().mapToInt(o -> o.getWeight()).sum();
-		if (sum + elevatorUser.getWeight() >= maxWeight) {
+		int maxWeight2 = getMaxWeight();
+		if (sum + elevatorUser.getWeight() >= maxWeight2) {
 			status = ElevatorStatus.STOPPED;
 			sendAlarm();
 		}
-		
 	}
 	
+	protected abstract int getMaxWeight();
+
 	private void sendAlarm() {
 		keyBoard.sendAlarm(this);
 	}
-
-	abstract boolean cardControl();
 
 	public KeyBoard getKeyBoard() {
 		return keyBoard;
@@ -93,10 +101,11 @@ public abstract class AbstractElevator implements Runnable {
 	
 	@Override
 	public void run() {
-		while (!queue.isEmpty() && !status.equals(ElevatorStatus.STOPPED)) {
+		Logger.log("empieza a moverse ", true);
+		while (!queue.isEmpty()) {
 			Floor floor = queue.get(0);
-			arriveToANewFloor(floor);
 			queue.remove(0);
+			arriveToANewFloor(floor);
 			if(!queue.isEmpty()) {
 				actualizeStatus(floor, queue.get(0));
 			}else {
@@ -127,4 +136,11 @@ public abstract class AbstractElevator implements Runnable {
 		return currentFloor;		
 	}
 
+	public void addKeyBoard(KeyBoard theKeyBoard) {
+		keyBoard = theKeyBoard;
+	}
+
+	public void setInitialFloor(Floor theInitialFloor) {
+		currentFloor = theInitialFloor;
+	}
 }

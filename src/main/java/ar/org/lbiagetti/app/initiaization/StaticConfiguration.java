@@ -8,5 +8,5 @@ public class StaticConfiguration {
 	static Integer numberOfFloors = 50;
 	static Integer numberOfBasements = 1;
 	static List <Integer> restrictedFloors = new ArrayList(Arrays.asList(-1,50));
-	static boolean debugLogger = true;
+	public static boolean debugLogger = false;
 }

@@ -27,6 +27,10 @@ public class Building {
 	public List <Floor> getFloors(){
 		return floors;
 	}
+	
+	public ElevatorManager getElevatorManager() {
+		return elevatorManager;
+	}
 
 	public void addElevator(AbstractElevator theElevator) {
 		elevatorManager.addElevator(theElevator);
@@ -53,5 +57,9 @@ public class Building {
 			}
 		}
 		throw new RuntimeException("El piso no existe");
+	}
+	
+	private void callInmediatelyElevator(AbstractElevator elevator, Floor floor) {
+		elevatorManager.callInmediately(elevator, floor);
 	}
 }

@@ -1,14 +1,11 @@
 package ar.org.lbiagetti.app.elevator;
 
 public class FreightElevator extends AbstractElevator {
+	private int maxWeight = 3000;
 
 	@Override
-	void weightControl(IElevatorUser elevatorUser) {
-		// TODO Auto-generated method stub
+	protected int getMaxWeight() {
+		return maxWeight;
 	}
 
-	@Override
-	boolean cardControl() {
-		return true;
-	}
 }

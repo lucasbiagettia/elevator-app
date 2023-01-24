@@ -9,19 +9,22 @@ import ar.org.lbiagetti.app.elevator.AbstractElevator;
 import ar.org.lbiagetti.app.elevator.ElevatorCaller;
 import ar.org.lbiagetti.app.elevator.IElevatorUser;
 import ar.org.lbiagetti.app.elevator.elevator_manager.Direction;
+import ar.org.lbiagetti.app.elevator.elevator_manager.ElevatorException;
 import ar.org.lbiagetti.app.elevator.elevator_manager.KeyBoard;
-import ar.org.lbiagetti.app.security_systems.IKeyUser;
+import ar.org.lbiagetti.app.initiaization.Logger;
+import ar.org.lbiagetti.app.security_systems.Key;
 
-public class Human implements IKeyUser, IElevatorUser {
+public class Human implements IElevatorUser {
 	// TODO despues vemos que ahcemos con las interfaces y clases abstractas
 	private Optional<Building> optionalBuilding = Optional.empty();
 	private Optional <Floor> optionalFloor = Optional.empty();
-	private Optional <Direction> lastDirection;
 	private int weight = 200;
+	private Key key;
 
 	public void enterTheBuilding(Building building) {
 		optionalBuilding = Optional.of(building);
 		optionalFloor = Optional.of(building.getFirstFloor());
+		Logger.log("Entra el edificio el usuario " + this.toString(), true);
 	}
 	
 	public Optional<Building> getOptionalBuilding() {
@@ -29,10 +32,10 @@ public class Human implements IKeyUser, IElevatorUser {
 	}
 	
 	// TODO este método debería estar en la interfaz
-	public void callAndEnterElevator(AbstractElevator abstractElevator, Direction theDirection) {
+	public void callAndWaitThe(AbstractElevator abstractElevator, Direction theDirection) {
+		Logger.log("Lllama al ascensor " + abstractElevator.toString()+ "El usuario " + this.toString() +" con direccion " + theDirection, true);
 		ElevatorCaller elevatorCaller = getElevatorCaller(abstractElevator);
 		elevatorCaller.call(theDirection);
-		lastDirection = Optional.of(theDirection);
 		abstractElevator.notifyMe(optionalFloor.get(), this);
 	}
 	
@@ -53,22 +56,22 @@ public class Human implements IKeyUser, IElevatorUser {
 	}
 
 	private void getEnterTheElevator(AbstractElevator elevator) {
-		if (!elevator.addNewUser(this)) {
-			callAndEnterElevator(elevator, lastDirection.get());
-			List<Floor> floors = optionalBuilding.get().getFloors();
-			int size = floors.size();
-			Floor floor = floors.get((int) (Math.random()*size));
-			chooseFloor(elevator, floor);
-		}else {
-			callAndEnterElevator(elevator, lastDirection.get());
+		KeyBoard keyBoard = elevator.getKeyBoard();
+		try {
+		keyBoard.goToFloor(selectRandomFloor(), this);
+		} catch (ElevatorException e){
+			return;
 		}
+		elevator.addNewUser(this);
 	}
 	
-	private void chooseFloor(AbstractElevator elevator, Floor floor) {
-		// TODO en una aplicación real este método debería sobreescribirse y el usuario deberìa pdoer elegirlo
-			KeyBoard keyBoard = elevator.getKeyBoard();
-			keyBoard.goToFloor(floor);
+	private Floor selectRandomFloor(){
+		List<Floor> floors = optionalBuilding.get().getFloors();
+		int size = floors.size();
+		Floor floor = floors.get((int) (Math.random()*size));
+		return floor;
 	}
+	
 
 	@Override
 	public void setNewFloor(Floor floor) {
@@ -78,5 +81,16 @@ public class Human implements IKeyUser, IElevatorUser {
 	@Override
 	public int getWeight() {
 		return weight;
+	}
+
+	@Override
+	public Key getKey() {
+		return key;
+	}
+
+	@Override
+	public void giveKey(Key theKey) {
+		key = theKey;
+		
 	}
 }

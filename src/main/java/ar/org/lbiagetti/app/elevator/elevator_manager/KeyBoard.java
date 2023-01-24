@@ -2,6 +2,7 @@ package ar.org.lbiagetti.app.elevator.elevator_manager;
 
 import ar.org.lbiagetti.app.building.Floor;
 import ar.org.lbiagetti.app.elevator.AbstractElevator;
+import ar.org.lbiagetti.app.elevator.IElevatorUser;
 
 public class KeyBoard {
 	AbstractElevator elevator;
@@ -12,8 +13,8 @@ public class KeyBoard {
 		elevatorManager = theElevatorManager;
 	}
 
-	public void goToFloor(Floor floor) {
-		elevatorManager.goToFloor(floor, elevator);
+	public void goToFloor(Floor floor, IElevatorUser elevatorUser) throws ElevatorException {
+		elevatorManager.goToFloor(floor, elevator, elevatorUser);
 	}
 
 	public void sendAlarm(AbstractElevator abstractElevator) {
