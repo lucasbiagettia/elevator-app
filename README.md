@@ -46,7 +46,7 @@ In this program are used as examples.
 - To decide how include the new request in the queue we assume that each Elevator works as two elevators beacause is not the same the elevator ascending that descending. The algorithm include the new step in the queue prioritizing not to change the direction of the elevator.
 
 # Next steps
-- Implement the following classes as a singleton and inject that
+- Implement the following classes as a singleton and inject them
 	- StaticConfiguration
 	- Logger
 	- KeyManager
