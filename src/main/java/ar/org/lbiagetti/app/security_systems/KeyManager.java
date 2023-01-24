@@ -15,13 +15,16 @@ public class KeyManager {
 
 	public static void giveKey(IElevatorUser keyUser) {
 		int i = getRandomInt();
+		Key key;
 		if (i%3 == 0) {
-			keyUser.giveKey(new Key(TypeOfKey.TOTAL_ACCESS));
+			key = new Key(TypeOfKey.TOTAL_ACCESS);
 			Logger.log("Damos la key total access al user " + keyUser.toString(), true);
 		}else {
-			keyUser.giveKey(new Key(TypeOfKey.NORMAL));
+			key = new Key(TypeOfKey.NORMAL);
 			Logger.log("Damos la key normal al user " + keyUser.toString(), true);
 		}
+		keyUser.giveKey(key);
+		verifyFalseKey.put(keyUser, key);
 		
 	}
 
@@ -36,7 +39,7 @@ public class KeyManager {
 	public static boolean hasPermissions(IElevatorUser theUser, Floor floor) {
 		if (forbiddenFloors.contains(floor)) {
 			Key keyUser = theUser.getKey();
-			Key keyMap = verifyFalseKey.get(keyUser);
+			Key keyMap = verifyFalseKey.get(theUser);
 			if (keyUser != keyMap) {
 				return false;
 			}
